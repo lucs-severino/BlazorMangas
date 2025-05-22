@@ -71,7 +71,7 @@ namespace BlazorMangas.Models.DTOs
         public int Estoque { get; set; }
 
         [JsonIgnore]
-        public Categoria? Categoria { get; set; }
+        public CategoriaDTO? Categoria { get; set; }
 
         [DisplayName("Categorias")]
         public int CategoriaId { get; set; }

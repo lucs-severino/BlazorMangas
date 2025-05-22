@@ -1,7 +1,50 @@
 ﻿@page "/categorias"
+@inject ICategoriaService _categoriaService
+@inject NavigationManager NavigationManager
 
-<h3>Categorias</h3>
+<h2>Categorias</h2>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">@errorMessage</p>
+}
+else if (categorias.Count == 0)
+{
+    <p>Nenhuma categoria encontrada.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead><tr><th>Id</th><th>Nome</th></tr></thead>
+        <tbody>
+            @foreach (var categoria in categorias)
+            {
+                <tr>
+                    <td>@categoria.Id</td>
+                    <td>@categoria.Nome</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    private List<CategoriaDTO> categorias = new List<CategoriaDTO>();
+    private string? errorMessage;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            categorias = await _categoriaService.GetCategorias();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            NavigationManager.NavigateTo("notauthorized");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Erro ao carregar categorias: " + ex.Message;
+        }
+    }
 }
